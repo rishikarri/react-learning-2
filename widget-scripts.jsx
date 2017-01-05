@@ -1,35 +1,35 @@
 var products = [
 	{
 		category: 'Sporting Goods',
-		price: '$49:99',
+		price: '$49.99',
 		name: 'Football',
 		inStock: true
 	},
 	{
 		category: 'Sporting Goods',
-		price: '$9:99',
+		price: '$9.99',
 		name: 'Baseball',
 		inStock: true
 
 	},
 	{
 		category: 'Sporting Goods',
-		price: '$29:99',
+		price: '$29.99',
 		name: 'Basketball',
-		inStock: true
+		inStock: false
 	},
 
 	{
 		category: 'Electronics',
-		price: '$99:99',
+		price: '$99.99',
 		name: 'iPod Touch',
 		inStock: true
 	},
 	{
 		category: 'Electronics',
-		price: '$399:99',
+		price: '$399.99',
 		name: 'iPhone 5',
-		inStock: true
+		inStock: false
 	},
 	{
 		category: 'Electronics',
@@ -42,22 +42,45 @@ var products = [
 function ProductCategoryRow(props){
 	return(
 		<tr>
-			<td>Sporting Goods</td>
+			<td>{props.category}</td>
 		</tr>
 	)
 }
 
 function ProductRow(props){
+		if(props.product.inStock == true){
+			var productClass = "black"
+		}else{
+			var productClass = "red"
+		}
 		return(
 			<tr>
-				<td>Football</td>
-				<td>$19.99</td>
+				<td className={productClass}>{props.product.name}</td>
+				<td className={productClass}>{props.product.price}</td>
 			</tr>	
 		)
 		
 }
 
 function ProductTable(props){
+	//init a local var to hold all of our rows
+	var rows = []; 
+	// init a local var to keep track of what category we are on 
+	var lastCategory = ""; 
+	var key = 0; 
+
+	products.forEach(function(product, index){
+		if(product.category !== lastCategory){
+			//we need to add this to our rows array because it's a new category
+			rows.push(<ProductCategoryRow key={key} category={product.category} />) 
+			lastCategory = product.category;
+			key++;
+		}
+		rows.push(<ProductRow key={key} product={product} />)
+		key++;
+	})
+
+
 	return(
 		<table>
 			<thead>
@@ -68,8 +91,7 @@ function ProductTable(props){
 			</thead>
 
 			<tbody>
-				<ProductCategoryRow />
-				<ProductRow />
+				{rows}
 			</tbody>
 		</table>
 	)
@@ -97,14 +119,14 @@ function FilterableProductTable(props){
 	return(
 		<div className="filterable-product-table">
 			<SearchBar />
-			<ProductTable products={props.products}/>
+			<ProductTable products={props.products} />
 		</div>
 	)
 }
 
 function Application(props){
 	return(
-		<FilterableProductTable products={props.products}/>
+		<FilterableProductTable products={props.products} />
 	)
 }
 
