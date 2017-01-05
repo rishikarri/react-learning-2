@@ -1,3 +1,5 @@
+
+
 var products = [
 	{
 		category: 'Sporting Goods',
